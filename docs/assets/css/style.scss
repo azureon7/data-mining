@@ -2,4 +2,9 @@
 ---
 
 @import "{{ site.theme }}";
-header h1 {font-family: trebuchet ms !important; font-variant: small-caps}
+body, header h1, h1 {font-family: trebuchet ms !important}
+header h1 {font-variant: small-caps; margin-left:0 !important}
+
+.highlight .o {color: #1bc3bd !important}
+.highlight .m {color: #d0d0d0 !important}
+.highlight .s2 {color :#4ab166 !important}
