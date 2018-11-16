@@ -2,6 +2,8 @@
 layout: default
 ---
 
+[Back](./index.html)
+
 # BikeSharing Competition
 
 NAME: Giabelli Anna, Mandelli Letizia, Marigo Fabio
@@ -14,29 +16,41 @@ TEAM: LAF
 
 ROUND: 1st
 
-## References:
+### Summary
+
+Our strategy was
+
+1. Predict separately the two variables "Registered" and "Casual", and then "Count" as their sum;
+2. Transform the target variables to `log(x+1)`;
+3. Fill the "Windspeed" variable missing values with a `randomForest` regression;
+4. Discretize continuous attributes with simple `rpart` trees splits, choosing at first "Registered", then "Casual" as response;
+5. Create new features, e.g. hourly average of "Registered" and "Casual";
+6. Random Forest algorithm, using different sets of variables for "Registered" and "Casual".
+
+### References
 
 * "The caret package": http://topepo.github.io/caret/index.html
 * Per feature engineering, ispirazione da: https://www.kaggle.com/gauravjindal2309/bike-sharing-demand/code
 
-## Models
+### Models
 
 * Random Forest
 
-## Non-standard R packages
+### Non-standard R packages
 
-* moments
-* lubridate
-* dummies
-* Metrics
+* `randomForest`
+* `rpart`
+* `lubridate`
+* `dummies`
+* `Metrics`
 
-## R code to reproduce the last submission:
+### R code to reproduce the last submission:
 
 ```r
 rm(list=ls())
 
-library(lubridate); library(dummies); library(randomForest); library(rpart)
-library(Metrics); library(randomForest)
+library(lubridate); library(dummies); library(randomForest); 
+library(Metrics); library(rpart)
 
 start.time <- Sys.time()
 

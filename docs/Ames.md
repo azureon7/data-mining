@@ -2,6 +2,8 @@
 layout: default
 ---
 
+[Back](./index.html)
+
 # Ames Competition
 
 NAME: Fabio Marigo
@@ -14,7 +16,15 @@ TEAM: fabio.marigo
 
 ROUND: 1st
 
-### References:
+### Summary
+
+My strategy was
+
+1. Transform the "SalePrice" variable to `log10(x+1)`;
+2. Discretize some attributes with simple `rpart` trees splits;
+3. Impute average (for continuous variables), mode (categorical) to "alone" missing values;
+4. Weighted average of Gradient Boosting Machines (`gbm`), Ridge Regression (`glmnet`) and Linear Regression (`lm`);
+5. Weighted average of Gradient Boosting Machines (`gbm`) and Ridge Regression (`glmnet`) for observations of houses without basements;
 
 ### Models
 
@@ -22,9 +32,9 @@ ROUND: 1st
 
 ### Non-standard R packages
 
-* rpart
-* glmnet
-* gbm
+* `rpart`
+* `glmnet`
+* `gbm`
 
 ### R code to reproduce the last submission:
 

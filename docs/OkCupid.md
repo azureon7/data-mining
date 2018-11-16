@@ -2,6 +2,8 @@
 layout: default
 ---
 
+[Back](./index.html)
+
 # OkCupid Competition
 
 NAME: Anna Giabelli, Letizia Mandelli, Fabio Marigo
@@ -16,9 +18,11 @@ ROUND: 1st
 
 ### Summary
 
-* aggregazione delle modalità di alcune variabili
-* trasformazione variabili factor
-* Random forest bilanciata con ciclo semi
+Our strategy was
+
+1. Aggregate categorical attributes;
+2. Create some dummy and categorical variables;
+3. Write from scratch a function which fits B=5000 balanced trees with `rpart` returning the probability of being "stem" and then it takes the median of these probabilities.
 
 ### Models
 
@@ -26,15 +30,15 @@ ROUND: 1st
 
 ### Non-standard R packages
 
-* dplyr
-* rpart
-* matrixStats
+* `dplyr`
+* `rpart`
+* `matrixStats`
 
 ### R code to reproduce the last submission:
 
 ```r
 #PACCHETTI
-library(dplyr)
+library(dplyr); library(rpart); library(matrixStats)
 
 # READ CSV
 train <- read.csv('http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/101.csv', stringsAsFactors = F)
@@ -102,7 +106,7 @@ D$sign_imp[which(D$sign_modifer == "but_it_doesnt_matter")] <- "0"
 D$sign_imp[which(D$sign_modifer == "and_its_fun_to_think_about")] <- "1"
 D$sign_imp[which(D$sign_modifer == "and_it_matters_a_lot")] <- "2"
 
-# et? aggregata
+# age aggregata
 D$age_A <- D$age
 D$age_A[which(D$age_A < 21)] <- "18-21"
 D$age_A[which(D$age_A >= 40 & D$age_A <= 44)] <- "40-44"
@@ -217,9 +221,7 @@ test = D[4001:5000, var2]
 #---------------
 
 rfb.fit = function(X_train, y_train, fixed_attrs=0, theta=1, B=1000, alpha=1/3, max_features=0, small_class=NA, reins=T,maxdepth=30,minsplit=20,minbucket=7,seme=1:B){
-  library(rpart)
-  #library(tree)
-  
+   
   if (is.na(small_class)){
     C1 = levels(y_train)[which.min(c(length(y_train[y_train==levels(y_train)[1]]),
                                     length(y_train[y_train==levels(y_train)[2]])))]
@@ -274,7 +276,7 @@ rfb.fit = function(X_train, y_train, fixed_attrs=0, theta=1, B=1000, alpha=1/3, 
 
 rfb.predict <- function(rfb_object, newdata, method='class'){
   
-  library(matrixStats)
+  
   B = length(rfb_object$Trees)
   
   # METHOD = CLASS
