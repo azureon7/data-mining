@@ -26,6 +26,14 @@ My strategy was
 4. Weighted average of Gradient Boosting Machines (`gbm`), Ridge Regression (`glmnet`) and Linear Regression (`lm`);
 5. Weighted average of Gradient Boosting Machines (`gbm`) and Ridge Regression (`glmnet`) for observations of houses without basements;
 
+### References
+
+* About `gbm`:
+- [https://stats.stackexchange.com/questions/242105/generating-predictions-on-training-data-in-gbm-regression](https://stats.stackexchange.com/questions/242105/generating-predictions-on-training-data-in-gbm-regression) ;
+- [https://pdfs.semanticscholar.org/a3f6/d964ac323b87d2de3434b23444cb774a216e.pdf](https://pdfs.semanticscholar.org/a3f6/d964ac323b87d2de3434b23444cb774a216e.pdf)
+- [https://datascienceplus.com/gradient-boosting-in-r/](https://datascienceplus.com/gradient-boosting-in-r/)
+- [http://allstate-university-hackathons.github.io/PredictionChallenge2016/GBM](http://allstate-university-hackathons.github.io/PredictionChallenge2016/GBM)
+
 ### Models
 
 * Weighted average of Linear Model, Ridge Regression and Gradient Boosting Machines
