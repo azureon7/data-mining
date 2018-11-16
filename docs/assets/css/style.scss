@@ -2,7 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
-body, header h1, h1 {font-family: trebuchet ms !important}
+body, header h1, h1, h2 {font-family: trebuchet ms !important}
 header h1 {font-variant: small-caps; margin-left:0 !important}
 
 .highlight .o {color: #1bc3bd !important}
