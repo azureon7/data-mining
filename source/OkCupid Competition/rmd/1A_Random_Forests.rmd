@@ -1,0 +1,218 @@
+---
+title: "VALIDATION RF"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r include=FALSE}
+rm(list=ls())
+source("source/OkCupid_Functions.R")
+source("source/RandomForestBalanced.R")
+library(randomForest)
+```
+
+# Random Forests Bilanciati
+
+## Tutte le variabili
+
+```{r}
+# READ CSV
+d <- read.csv('./new_datasets/data.csv')
+# VARIABILI DA TENERE:
+attrs <- colnames(d)[which(colnames(d)!='Class')]
+```
+
+Un modello solo:
+
+```{r}
+# CREO TRAINING SET E TEST SET PER VALUTARE MODELLI
+set.seed(1)
+N <- 500
+p <- sample(1:nrow(d), size=N, replace = F)
+y_train <- d[-p, 'Class']
+X_train <- d[-p, which(colnames(d)!='Class')]
+y_test <- d[p,'Class']
+X_test <- d[p, which(colnames(d)!='Class')]
+
+# FIT
+w = 0.50
+train <- data.frame(X_train[,attrs], CLASS=y_train)
+set.seed(2)
+rf.classwt = randomForest(CLASS~.,data=train,ntree=1000,mtry=4,classwt=c(w,1-w),nodesize=1)
+
+# PREDICT
+y_pred=predict(rf.classwt,newdata=X_test[,attrs], type='prob')[,"stem"]
+Evaluate(y_test,ifelse(y_pred>0.5,"stem","other"))
+```
+
+Chiaramente il problema è w (il peso delle modalità della variabile classe). Ho fatto quindi un for con diversi valori di w, ma i risultati sono comunque poco soddisfacenti in quanto ci sono troppe variabili nel dataset. Vediamo di farne una selezione.
+
+## Sottoinsieme di variabili 1) (quello che ha ottenuto il massimo su BeeViva, 76,24\%)
+
+Pongo w=0.35 (ottenuto con una CV, ma i risultati sono scarsi)
+
+```{r}
+attrs <- c("male", "essay_link", "tech", "computer", "science", "fixing", 
+           "matrix", "electronic", "nerdy", "artist", "SV", "body_type_A", "diet_A", "single",
+           "student", "teaching", "loyal", "atheist", "smoke", "sign_imp", 
+           "education_A", "income100000", "phdYN") 
+
+# FIT
+w = 0.35
+train <- data.frame(X_train[,attrs], CLASS=y_train)
+set.seed(2)
+rf.classwt = randomForest(CLASS~.,data=train,ntree=1000,mtry=4,classwt=c(w,1-w),nodesize=1)
+
+# PREDICT
+y_pred=predict(rf.classwt,newdata=X_test[,attrs], type='prob')[,"stem"]
+Evaluate(y_test,ifelse(y_pred>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.5, ovvero 11 variabili):
+
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.5,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.45, ovvero 10 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.45,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.4, ovvero 9 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.4,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.35, ovvero 8 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.35,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.3, ovvero 6 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.3,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.25, ovvero 5 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.25,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.2, ovvero 4 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.2,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.15, ovvero 3 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.15,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale (alpha = 0.1, ovvero 2 variabili):
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.1,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Alpha = 0.25 -> BeeViva 76,24\%
+
+Alpha = 0.2 -> BeeViva 76,42\%
+
+Alpha = 0.15 -> BeeViva 76,66\%
+
+Abbassando alpha, si spostano verso "other" le previsioni. Presumo che per ottenere un punteggio alto si debba comunque mantenere una previsione equilibrata e distorta verso "other".
+
+## Sottoinsieme di variabili 2)
+
+```{r}
+attrs <- c("male", "UnionDummy", "educ_dummy1", "educ_dummy2", "age_dummy", "sign_imp", "education_A",
+           "income100000", "SV", "phdYN", "tech", "computer", "science")
+```
+
+```{r}
+# FIT
+w = 0.35
+train <- data.frame(X_train[,attrs], CLASS=y_train)
+set.seed(2)
+rf.classwt = randomForest(CLASS~.,data=train,ntree=1000,mtry=4,classwt=c(w,1-w),nodesize=1)
+
+# PREDICT
+y_pred=predict(rf.classwt,newdata=X_test[,attrs], type='prob')[,"stem"]
+Evaluate(y_test,ifelse(y_pred>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale:
+
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.5,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+Se seleziono un sotto-sottoinsieme di variabili che devono essere sempre estratte immagino che aumenti il numero di stem previsti (in quanto seleziono solo variabili significative).
+
+```{r}
+fixed_attrs = c("UnionDummy", "educ_dummy1", "male", "phdYN")
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=fixed_attrs,y_train,theta=1,alpha=0.5,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+## Sottoinsieme di variabili 3)
+
+```{r}
+attrs <- c("male", "UnionDummy", "educ_dummy1", "educ_dummy2", "age_dummy", "education_A","income100000", "SV", "tech")
+```
+
+```{r}
+# FIT
+w = 0.35
+train <- data.frame(X_train[,attrs], CLASS=y_train)
+set.seed(2)
+rf.classwt = randomForest(CLASS~.,data=train,ntree=1000,mtry=4,classwt=c(w,1-w),nodesize=1)
+
+# PREDICT
+y_pred=predict(rf.classwt,newdata=X_test[,attrs], type='prob')[,"stem"]
+Evaluate(y_test,ifelse(y_pred>0.5,"stem","other"))
+```
+
+Random forest bilanciato manuale:
+
+```{r}
+fit1 <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=0.5,B=1000,minsplit=10, minbucket=10)
+y_pred1 <- rfb.predict(fit1, newdata = X_test[,attrs], method='median')
+Evaluate(y_test,ifelse(y_pred1>0.5,"stem","other"))
+```
+
+
+## Conclusione
+
+Sottoinsieme 1) Manuale è il più equilibrato: predice in modo abbastanza proporzionato;
+
+Sottoinsieme 2) Automatico è simile a quello sopra ma è piuttosto distorto verso stem. Quello con variabili fisse ancor di più;
+
+Sottoinsieme 3) Automatico è simile al 2)+fixed, meno distorto
+
+Tutti e tre nel markdown seguente vengono cross-validati per valutare effettivamente le AUC

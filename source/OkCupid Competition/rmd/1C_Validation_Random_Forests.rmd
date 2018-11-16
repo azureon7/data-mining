@@ -1,0 +1,81 @@
+---
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r include=FALSE}
+rm(list=ls())
+source("source/OkCupid_Functions.R")
+source("source/RandomForestBalanced.R")
+library(randomForest)
+```
+
+# Random Forests Bilanciati
+
+```{r}
+# READ CSV
+d <- read.csv('./new_datasets/data.csv')
+```
+
+# Cross validation al modello migliore
+
+## Selezione delle variabili
+
+```{r}
+attrs <- c("male", "essay_link", "tech", "computer", "science", "fixing", 
+           "matrix", "electronic", "nerdy", "artist", "SV", "body_type_A", "diet_A", "single",
+           "student", "teaching", "loyal", "atheist", "smoke", "sign_imp", 
+           "education_A", "income100000", "phdYN")
+```
+
+```{r}
+# K-FOLDS CROSS VALIDATION (K=10)
+K = 10
+AUC=c()
+N <- as.integer(nrow(d)/K)
+set_rows <- 1:nrow(d)
+
+
+
+
+```
+
+
+## Scelta di alpha con 20-Folds CV
+
+```{r}
+# K-FOLDS CROSS VALIDATION (K=20)
+K = 20
+range_a <- c(0.1,0.15,0.20,0.25,0.3,0.35,0.4)
+
+AUC=c()
+for (a in range_a){
+  auc.K=c()
+  N <- as.integer(nrow(d)/K)
+  set_rows <- 1:nrow(d)
+  for(k in 1:K){
+    set.seed(k)
+    p <- sample(set_rows, size=N, replace = F)
+    set_rows <- setdiff(set_rows,p)
+    # suddivisione training/test set
+    y_train <- d[-p, 'Class']
+    X_train <- d[-p, which(colnames(d)!='Class')]
+    y_test <- d[p,'Class']
+    X_test <- d[p, which(colnames(d)!='Class')]
+    # fit
+    fit.k <- rfb.fit(X_train[,attrs],fixed_attrs=0,y_train,theta=1,alpha=a,B=500,minsplit=10, minbucket=10)
+    # predict
+    y_pred.k <- rfb.predict(fit.k, newdata = X_test[,attrs], method='median')
+    
+    auc.K[k] = Evaluate(y_test,ifelse(y_pred.k >= 0.5, "stem", "other"), echo = FALSE)$auc
+  }
+  AUC=c(AUC,mean(auc.K))
+}
+
+plot(range_a,AUC, type='b', ylim=c(0.25,1))
+range_a[which.max(AUC)]
+```
