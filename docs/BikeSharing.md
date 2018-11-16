@@ -29,8 +29,8 @@ Our strategy was
 
 ### References
 
-* "The caret package": http://topepo.github.io/caret/index.html
-* Per feature engineering, ispirazione da: https://www.kaggle.com/gauravjindal2309/bike-sharing-demand/code
+* "The caret package": [http://topepo.github.io/caret/index.html](http://topepo.github.io/caret/index.html)
+* Per feature engineering, ispirazione da: [https://www.kaggle.com/gauravjindal2309/bike-sharing-demand/code](https://www.kaggle.com/gauravjindal2309/bike-sharing-demand/code)
 
 ### Models
 
