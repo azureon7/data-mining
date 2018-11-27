@@ -250,6 +250,15 @@ pred.cnt8_matrix <- as.matrix(pred.cas8) + as.matrix(pred.reg8)
 pred.cnt8 <- apply(X = pred.cnt8_matrix, MARGIN = 1 , FUN = mean, trim = .2)
 write.table(pred.cnt8, file = "./submission/BikeSharing_Submission.txt", row.names = F, col.names = F)
 
+head(pred.cnt8)
+```
+
+```
+    10887     10888     10889     10890     10891     10892 
+10.634176  5.130941  2.959474  2.368902  2.113820  6.549004 
+```
+
+```r
 end.time <- Sys.time()
 time.taken <- end.time - start.time
 time.taken
@@ -259,13 +268,6 @@ time.taken
 Time difference of 17.09633 mins
 ```
 
-```r
-head(pred.cnt8)
-```
 
-```
-    10887     10888     10889     10890     10891     10892 
-10.634176  5.130941  2.959474  2.368902  2.113820  6.549004 
-```
 
 ![alt text](r2d2.gif "image")
