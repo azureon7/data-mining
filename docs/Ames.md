@@ -507,17 +507,6 @@ yy2[dtest$Bsmt.Qual!=0] <- (ypred.gbm[dtest$Bsmt.Qual!=0]*0.5 + ypred.ridge[dtes
 #==================
 # consegna
 write.table(yy2, './submission/Ames_submission.txt', row.names = F, col.names = F)
-
-end.time <- Sys.time()
-time.taken <- end.time - start.time
-time.taken
-```
-
-```
-Time difference of 1.17611 mins
-```
-
-```r
 # show first 6 predicted values
 head(yy2)
 ```
@@ -530,6 +519,16 @@ head(yy2)
 1464 217349.0
 1465 171927.3
 1466 197172.0
+```
+
+```r
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+```
+
+```
+Time difference of 1.17611 mins
 ```
 
 ![alt text](r2d2.gif "image")
