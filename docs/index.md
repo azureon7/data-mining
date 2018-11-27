@@ -8,4 +8,4 @@ layout: default
 
 [OkCupid competition](./OkCupid.html)
 
-![alt text](r2d2.gif "image")
+![alt text](./img/r2d2.gif "image")

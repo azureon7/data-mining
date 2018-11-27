@@ -6,15 +6,15 @@ layout: default
 
 # OkCupid Competition
 
-NAME: Anna Giabelli, Letizia Mandelli, Fabio Marigo
+**NAME**: Anna Giabelli, Letizia Mandelli, Fabio Marigo
 
-BADGE: 791989, 834096, 790237
+**BADGE**: 791989, 834096, 790237
 
-NICKNAME: giabellianna, l.mandelli17, fabio.marigo
+**NICKNAME**: giabellianna, l.mandelli17, fabio.marigo
 
-TEAM: LAF
+**TEAM**: LAF
 
-ROUND: 1st
+**ROUND**: 1st
 
 ### Summary
 
@@ -30,15 +30,16 @@ Our strategy was
 
 ### Non-standard R packages
 
-* `dplyr`
-* `rpart`
-* `matrixStats`
+* `dplyr`: preprocessing (function `mutate_if()` to transform character variables to factor);
+* `rpart`: modeling (trees of the Random Forest);
+* `matrixStats`: modeling (function `rowMedians()` in predict method);
 
 ### R code to reproduce the last submission:
 
 ```r
-#PACCHETTI
 library(dplyr); library(rpart); library(matrixStats)
+
+start.time <- Sys.time()
 
 # READ CSV
 train <- read.csv('http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/101.csv', stringsAsFactors = F)
@@ -353,10 +354,7 @@ X_train <- train; X_train$Class=NULL
 y_train <- train$Class
 
 #RANDOM FOREST
-pred.tot <- c()
-B <- 5000
-h.mat <- c()
-#RANDOM FOREST
+
 pred.tot <- c()
 B <- 5000
 h.mat <- c()
@@ -365,19 +363,31 @@ for(g in 1:100){
   h <- sample(1:100000, B,  replace=F)
   h.mat <- cbind(h.mat,h)
 }
+
 for(i in 1:100){
   fit.tot <- rfb.fit(X_train, y_train, theta=1, alpha=0.15, B=B, 
                      minsplit=10, minbucket=10, seme=h.mat[, i])
   pred.tot <- cbind(pred.tot, rfb.predict(fit.tot, newdata = X_test, method="median"))
 }
+
 y_pred_finale <- apply(X = pred.tot, MARGIN = 1 , FUN = mean, trim = .2)
 
 # SUBMISSION
-write.table(file="./submission/OkCupid_Submission_finale.txt", y_pred_finale, row.names = FALSE, col.names = FALSE)
+# write.table(file="./submission/OkCupid_Submission_finale.txt", y_pred_finale, row.names = FALSE, col.names = FALSE)
 
 head(y_pred_finale)
 ```
 
 ```
 [1] 0.5313592 0.5312175 0.4751308 0.4541245 0.4763871 0.4811057
+```
+
+```r
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+```
+
+```
+Time difference of 2.364382 hours
 ```

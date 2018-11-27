@@ -6,15 +6,15 @@ layout: default
 
 # BikeSharing Competition
 
-NAME: Giabelli Anna, Mandelli Letizia, Marigo Fabio
+**NAME**: Anna Giabelli, Letizia Mandelli, Fabio Marigo
 
-BADGE: 791989, 834096, 790237
+**BADGE**: 791989, 834096, 790237
 
-NICKNAME: giabellianna, l.mandelli17, fabio.marigo 
+**NICKNAME**: giabellianna, l.mandelli17, fabio.marigo
 
-TEAM: LAF
+**TEAM**: LAF
 
-ROUND: 1st
+**ROUND**: 1st
 
 ### Summary
 
@@ -39,24 +39,22 @@ Our strategy was
 
 ### Non-standard R packages
 
-* `randomForest`
-* `rpart`
-* `lubridate`
-* `dummies`
-* `Metrics`
+* `randomForest`: preprocessing (missing values imputation) and modeling (final predictions);
+* `rpart`: preprocessing (continue variables to discrete);
+* `lubridate`: preprocessing (day of the week);
 
 ### R code to reproduce the last submission:
 
 ```r
-rm(list=ls())
-
-library(lubridate); library(dummies); library(randomForest); 
-library(Metrics); library(rpart)
+library(lubridate)
+library(randomForest)
+library(rpart)
 
 start.time <- Sys.time()
 
-d1 = read.csv("http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/99.csv", stringsAsFactors=F); 
-d2 = read.csv("http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/100.csv", stringsAsFactors=F); d2$casual<-d2$registered<-d2$count<-NA; 
+d1 = read.csv("http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/99.csv", stringsAsFactors=F)
+d2 = read.csv("http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/100.csv", stringsAsFactors=F)
+d2$casual<-d2$registered<-d2$count<-NA
 d = rbind(d1,d2); rm(d1,d2)
 train<-which(!is.na(d$count)); test<-which(is.na(d$count))
 
@@ -184,7 +182,7 @@ zeri<-which(d$windspeed==0)
 # myrf_wind <- randomForest(windspeed ~ season+weather+humidity+month+temp+year+atemp, dwind_train, ntree=250, importance=T)
 # ywind <- predict(myrf_wind, dwind_test)
 # write.csv(ywind, './new_data/windspeed.csv',row.names = F)
-d$windspeed[zeri]<-read.csv("https://raw.githubusercontent.com/fabiomarigo7/data-mining-competitions/master/BikeSharing%20Competition/new_data/windspeed.csv")$x
+d$windspeed[zeri]<-read.csv("https://raw.githubusercontent.com/fabiomarigo7/data-mining/master/source/BikeSharing%20Competition/new_data/windspeed.csv")$x
 
 #--------------------------------------------------------#
 # METTO REGISTERED, CASUAL, COUNT IN FONDO
@@ -193,16 +191,21 @@ z<-d$casual; d$casual<-NULL; d$casual<-z; rm(z)
 z<-d$count; d$count<-NULL; d$count<-z; rm(z)
 
 # ESPORTO
-d1<-d[train,]; write.csv(d1, './new_data/d1.csv', row.names = F)
-d2<-d[test,]; write.csv(d2, './new_data/d2.csv', row.names = F)
+d1<-d[train,] 
+d2<-d[test,]
+
+# write.csv(d1, './new_data/d1.csv', row.names = F)
+# write.csv(d2, './new_data/d2.csv', row.names = F)
 
 #---------------------
 # Modello Random Forest
 #---------------------
 
-d1<-read.csv("./new_data/d1.csv", stringsAsFactors = F)
-d2<-read.csv("./new_data/d2.csv", stringsAsFactors = F)
+# d1<-read.csv("./new_data/d1.csv", stringsAsFactors = F)
+# d2<-read.csv("./new_data/d2.csv", stringsAsFactors = F)
 
+d1 <- data.frame(d1, stringsAsFactors = F)
+d2 <- data.frame(d2, stringsAsFactors = F)
 d<-rbind(d1,d2); rm(d1,d2)
 
 train<-1:10886; test<-10887:17379
@@ -248,7 +251,7 @@ for(i in semi){
 
 pred.cnt8_matrix <- as.matrix(pred.cas8) + as.matrix(pred.reg8)
 pred.cnt8 <- apply(X = pred.cnt8_matrix, MARGIN = 1 , FUN = mean, trim = .2)
-write.table(pred.cnt8, file = "./submission/BikeSharing_Submission.txt", row.names = F, col.names = F)
+# write.table(pred.cnt8, file = "./submission/BikeSharing_Submission.txt", row.names = F, col.names = F)
 
 head(pred.cnt8)
 ```

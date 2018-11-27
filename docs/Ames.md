@@ -6,15 +6,15 @@ layout: default
 
 # Ames Competition
 
-NAME: Fabio Marigo
+**NAME**: Fabio Marigo
 
-BADGE: 790237
+**BADGE**: 790237
 
-NICKNAME: fabio.marigo
+**NICKNAME**: fabio.marigo
 
-TEAM: fabio.marigo
+**TEAM**: fabio.marigo
 
-ROUND: 1st
+**ROUND**: 1st
 
 ### Summary
 
@@ -23,37 +23,33 @@ My strategy was
 1. Transform the "SalePrice" variable to `log10(x+1)`;
 2. Discretize some attributes with simple `rpart` trees splits;
 3. Impute average (for continuous variables), mode (categorical) to "alone" missing values;
-4. Weighted average of Gradient Boosting Machines (`gbm`), Ridge Regression (`glmnet`) and Linear Regression (`lm`);
-5. Weighted average of Gradient Boosting Machines (`gbm`) and Ridge Regression (`glmnet`) for observations of houses without basements;
+4. Weighted average of Gradient Boosting regression (`gbm`), Ridge regression (`glmnet`) and Linear regression (`lm`);
+5. Weighted average of Gradient Boosting regression (`gbm`) and Ridge regression (`glmnet`) for observations of houses without basements;
 
 ### References
 
-* About `gbm`:
-- [https://stats.stackexchange.com/questions/242105/generating-predictions-on-training-data-in-gbm-regression](https://stats.stackexchange.com/questions/242105/generating-predictions-on-training-data-in-gbm-regression) ;
-- [https://pdfs.semanticscholar.org/a3f6/d964ac323b87d2de3434b23444cb774a216e.pdf](https://pdfs.semanticscholar.org/a3f6/d964ac323b87d2de3434b23444cb774a216e.pdf)
-- [https://datascienceplus.com/gradient-boosting-in-r/](https://datascienceplus.com/gradient-boosting-in-r/)
-- [http://allstate-university-hackathons.github.io/PredictionChallenge2016/GBM](http://allstate-university-hackathons.github.io/PredictionChallenge2016/GBM)
+About `gbm` (Generalized Boosted Models):
+* [https://projecteuclid.org/download/pdf_1/euclid.aos/1013203451](https://projecteuclid.org/download/pdf_1/euclid.aos/1013203451), theory by Friedman;
+* [https://stats.stackexchange.com/questions/242105/generating-predictions-on-training-data-in-gbm-regression](https://stats.stackexchange.com/questions/242105/generating-predictions-on-training-data-in-gbm-regression), about parameters;
+* [https://pdfs.semanticscholar.org/a3f6/d964ac323b87d2de3434b23444cb774a216e.pdf](https://pdfs.semanticscholar.org/a3f6/d964ac323b87d2de3434b23444cb774a216e.pdf), a guide to `gbm` package in `R`;
+* [https://datascienceplus.com/gradient-boosting-in-r/](https://datascienceplus.com/gradient-boosting-in-r/) example of using this model in `R`;
+
+About Ridge regression:
+* [https://realdataweb.wordpress.com/2017/05/23/ridge-regression-and-the-lasso/](https://realdataweb.wordpress.com/2017/05/23/ridge-regression-and-the-lasso/), an example in `R`;
 
 ### Models
 
-* Weighted average of Linear Model, Ridge Regression and Gradient Boosting Machines
+* Weighted average of Linear regression, Ridge regression and Gradient Boosting regression
 
 ### Non-standard R packages
 
-* `rpart`
-* `glmnet`
-* `gbm`
+* `rpart`: preprocessing (continue variables to discrete);
+* `glmnet`: modeling (Ridge regression);
+* `gbm`: modeling (Gradient Boosting regression);
 
 ### R code to reproduce the last submission:
 
 ```r
-#=================================
-#    HOUSE PRICES COMPETITION
-#=================================
-
-# (!) set working directory to source file location (!)
-rm(list=ls())
-
 library(rpart)
 library(glmnet)
 library(gbm)
@@ -442,16 +438,19 @@ d2$PID <- NULL
 train <- d2[d2$SalePrice!=-1,]
 test <- d2[d2$SalePrice==-1,]
 
-write.csv(train, './new_data/train.csv', row.names = F)
-write.csv(test, './new_data/test.csv', row.names = F)
+# write.csv(train, './new_data/train.csv', row.names = F)
+# write.csv(test, './new_data/test.csv', row.names = F)
 
 #=================================#
 #     M  O  D  E  L  I  N  G 
 #=================================#
 
 # read csv
-d1 <- read.csv("./new_data/train.csv", stringsAsFactors = F)
-d2 <- read.csv("./new_data/test.csv", stringsAsFactors = F)
+# d1 <- read.csv("./new_data/train.csv", stringsAsFactors = F)
+# d2 <- read.csv("./new_data/test.csv", stringsAsFactors = F)
+
+d1 <- data.frame(train, stringsAsFactors = F)
+d2 <- data.frame(test, stringsAsFactors = F)
 
 d <- rbind(d1,d2)
 
@@ -506,7 +505,8 @@ yy2[dtest$Bsmt.Qual!=0] <- (ypred.gbm[dtest$Bsmt.Qual!=0]*0.5 + ypred.ridge[dtes
 
 #==================
 # consegna
-write.table(yy2, './submission/Ames_submission.txt', row.names = F, col.names = F)
+# write.table(yy2, './submission/Ames_submission.txt', row.names = F, col.names = F)
+
 # show first 6 predicted values
 head(yy2)
 ```
