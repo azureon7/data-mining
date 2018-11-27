@@ -530,5 +530,3 @@ time.taken
 ```
 Time difference of 1.17611 mins
 ```
-
-![alt text](r2d2.gif "image")
