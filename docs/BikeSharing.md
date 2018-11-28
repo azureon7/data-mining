@@ -191,26 +191,26 @@ z<-d$casual; d$casual<-NULL; d$casual<-z; rm(z)
 z<-d$count; d$count<-NULL; d$count<-z; rm(z)
 
 # ESPORTO
-d1<-d[train,] 
-d2<-d[test,]
+dtrain<-d[train,] 
+dtest<-d[test,]
 
-# write.csv(d1, './new_data/d1.csv', row.names = F)
-# write.csv(d2, './new_data/d2.csv', row.names = F)
+# write.csv(dtrain, './dtrain.csv', row.names = F)
+# write.csv(dtest, './dtest.csv', row.names = F)
 
 #---------------------
 # Modello Random Forest
 #---------------------
 
-# d1<-read.csv("./new_data/d1.csv", stringsAsFactors = F)
-# d2<-read.csv("./new_data/d2.csv", stringsAsFactors = F)
+# d1<-read.csv("./dtrain.csv", stringsAsFactors = F)
+# d2<-read.csv("./dtest.csv", stringsAsFactors = F)
 
-d1 <- data.frame(d1, stringsAsFactors = F)
-d2 <- data.frame(d2, stringsAsFactors = F)
+d1 <- dtrain
+d2 <- dtest
 d<-rbind(d1,d2); rm(d1,d2)
 
 train<-1:10886; test<-10887:17379
 
-# TRASFORMO IN FACTOR
+# TRASFORMO IN FACTOR 
 to.factor <- c()
 for(col in colnames(d)) to.factor<-c(to.factor,class(d[,col]))
 to.factor <- which(to.factor=='character')
