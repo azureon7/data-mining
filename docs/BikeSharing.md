@@ -42,6 +42,7 @@ Our strategy was
 * `randomForest`: preprocessing (missing values imputation) and modeling (final predictions);
 * `rpart`: preprocessing (continue variables to discrete);
 * `lubridate`: preprocessing (day of the week);
+* `dplyr`: preprocessing (function mutate_if() to transform character variables to factor);
 
 ### R code to reproduce the last submission:
 
@@ -49,6 +50,7 @@ Our strategy was
 library(lubridate)
 library(randomForest)
 library(rpart)
+library(dplyr)
 
 start.time <- Sys.time()
 
@@ -191,26 +193,26 @@ z<-d$casual; d$casual<-NULL; d$casual<-z; rm(z)
 z<-d$count; d$count<-NULL; d$count<-z; rm(z)
 
 # ESPORTO
-dtrain<-d[train,] 
-dtest<-d[test,]
+d1<-d[train,] 
+d2<-d[test,]
 
-# write.csv(dtrain, './dtrain.csv', row.names = F)
-# write.csv(dtest, './dtest.csv', row.names = F)
+# write.csv(d1, './d1.csv', row.names = F)
+# write.csv(d2, './d2.csv', row.names = F)
 
 #---------------------
 # Modello Random Forest
 #---------------------
 
-# d1<-read.csv("./dtrain.csv", stringsAsFactors = F)
-# d2<-read.csv("./dtest.csv", stringsAsFactors = F)
+# d1<-read.csv("./d1.csv", stringsAsFactors = F)
+# d2<-read.csv("./d2.csv", stringsAsFactors = F)
 
-d1 <- dtrain
-d2 <- dtest
+d1 <- mutate_if(d1, is.factor, as.character)
+d2 <- mutate_if(d2, is.factor, as.character)
 d<-rbind(d1,d2); rm(d1,d2)
 
 train<-1:10886; test<-10887:17379
 
-# TRASFORMO IN FACTOR 
+# TRASFORMO IN FACTOR
 to.factor <- c()
 for(col in colnames(d)) to.factor<-c(to.factor,class(d[,col]))
 to.factor <- which(to.factor=='character')
