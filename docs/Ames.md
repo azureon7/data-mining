@@ -438,19 +438,19 @@ d2$PID <- NULL
 train <- d2[d2$SalePrice!=-1,]
 test <- d2[d2$SalePrice==-1,]
 
-# write.csv(train, './new_data/train.csv', row.names = F)
-# write.csv(test, './new_data/test.csv', row.names = F)
+# write.csv(train, './train.csv', row.names = F)
+# write.csv(test, './test.csv', row.names = F)
 
 #=================================#
 #     M  O  D  E  L  I  N  G 
 #=================================#
 
 # read csv
-# d1 <- read.csv("./new_data/train.csv", stringsAsFactors = F)
-# d2 <- read.csv("./new_data/test.csv", stringsAsFactors = F)
+# d1 <- read.csv("./train.csv", stringsAsFactors = F)
+# d2 <- read.csv("./test.csv", stringsAsFactors = F)
 
-d1 <- data.frame(train, stringsAsFactors = F)
-d2 <- data.frame(test, stringsAsFactors = F)
+d1 <- train
+d2 <- test
 
 d <- rbind(d1,d2)
 
@@ -496,7 +496,7 @@ ypred.lm <- 10^predict(fit1, newdata=dtest[dtest$Bsmt.Qual!=0,])-1
 # gbm
 set.seed(1)
 fit.gbm <- gbm(log10(SalePrice+1)~., data=dtrain, distribution = "gaussian",
-              n.trees = 10000, shrinkage = 0.001, interaction.depth = 6, n.minobsinnode = 20)
+               n.trees = 10000, shrinkage = 0.001, interaction.depth = 6, n.minobsinnode = 20)
 ypred.gbm <- 10^predict(fit.gbm, newdata = dtest, n.trees = 10000)
 # media ponderata
 yy2 <- (ypred.gbm*0.7+ypred.ridge*0.3)
