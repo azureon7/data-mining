@@ -1,15 +1,5 @@
 # OkCupid Competition 
 
-NAME: Anna Giabelli, Letizia Mandelli, Fabio Marigo
-
-BADGE: 791989, 834096, 790237
-
-NICKNAME: giabellianna, l.mandelli17, fabio.marigo
-
-TEAM: LAF
-
-ROUND: 1st
-
 ### Models
 
 * Random forest
