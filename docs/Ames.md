@@ -6,16 +6,6 @@ layout: default
 
 # Ames Competition
 
-**NAME**: Fabio Marigo
-
-**BADGE**: 790237
-
-**NICKNAME**: fabio.marigo
-
-**TEAM**: fabio.marigo
-
-**ROUND**: 1st
-
 ### Summary
 
 My strategy was
