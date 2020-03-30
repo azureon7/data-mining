@@ -5,17 +5,6 @@ output:
     keep_md: true
 ---
 
-NAME: Giabelli Anna, Mandelli Letizia, Marigo Fabio
-
-BADGE: 791989 834096 790237
-
-NICKNAME: giabellianna l.mandelli17 fabio.marigo 
-
-TEAM: LAF
-
-ROUND: 1st
-
-
 ## References:
 
 * "The caret package": http://topepo.github.io/caret/index.html
