@@ -1,16 +1,5 @@
 # Ames house prices
 
-NAME: Fabio Marigo
-
-BADGE: 790237
-
-NICKNAME: fabio.marigo
-
-TEAM: fabio.marigo
-
-ROUND: 1st
-
-
 ### References:
 
 
